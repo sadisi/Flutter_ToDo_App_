@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_summernote/flutter_summernote.dart';
 import 'package:flutter_todo_app/main.dart';
 
+
+
 void main() {
   runApp(MemoPadScreen());
 }
@@ -35,41 +37,49 @@ class _NotesPageState extends State<NotesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(kToolbarHeight),
-          child: Container(
-            width: double.infinity, // Set the width to occupy the entire screen width
-            color: Color(0xFFCB84FB),
-            child: AppBar(
-              backgroundColor: Colors.transparent, // Make AppBar transparent to show the custom background color
-              title: Center(
-                child: Text(
-                  widget.title,
-                  style: TextStyle(
-                    fontSize: 22.0,
-                    color: Colors.white,
-                    fontFamily: 'Roboto-Black',
-                  ),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: Container(
+          width: double
+              .infinity, // Set the width to occupy the entire screen width
+          color: Color(0xFFCB84FB),
+          child: AppBar(
+            backgroundColor: Colors
+                .transparent,
+            // Make AppBar transparent to show the custom background color
+            title: Center(
+              child: Text(
+                widget.title,
+                style: TextStyle(
+                  fontSize: 22.0,
+                  color: Colors.grey.shade800,
+                  fontFamily: 'Roboto-Black',
                 ),
               ),
-              elevation: 0,
-              actions: <Widget>[
-                IconButton(
-                  icon: Icon(Icons.save),
-                  onPressed: () async {
-                    final value = (await _keyEditor.currentState?.getText());
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      duration: Duration(seconds: 5),
-                      content: Text(value ?? '-'),
-                    ));
-                  },
-                )
-              ],
             ),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back), // Use any icon for the back button
+              onPressed: () {
+                Navigator.pop(context); // Navigate back when the back button is pressed
+              },
+            ),
+            elevation: 0,
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.save),
+                onPressed: () async {
+                  final value = (await _keyEditor.currentState?.getText());
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    duration: Duration(seconds: 5),
+                    content: Text(value ?? '-'),
+                  ));
+                },
+              )
+            ],
           ),
         ),
-
-  backgroundColor: Color(0xFFCB84FB),
+      ),
+      backgroundColor: Color(0xFFCB84FB),
       body: FlutterSummernote(
         hint: 'Your text here...',
         key: _keyEditor,
