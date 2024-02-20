@@ -35,32 +35,41 @@ class _NotesPageState extends State<NotesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.teal,
-        title: Center(
-          child: Text(widget.title,
-            style: TextStyle(
-              fontSize: 20.0,
-              color: Colors.white,
-              fontFamily: 'Roboto-Black',
-
-            ),),
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(kToolbarHeight),
+          child: Container(
+            width: double.infinity, // Set the width to occupy the entire screen width
+            color: Color(0xFFCB84FB),
+            child: AppBar(
+              backgroundColor: Colors.transparent, // Make AppBar transparent to show the custom background color
+              title: Center(
+                child: Text(
+                  widget.title,
+                  style: TextStyle(
+                    fontSize: 22.0,
+                    color: Colors.white,
+                    fontFamily: 'Roboto-Black',
+                  ),
+                ),
+              ),
+              elevation: 0,
+              actions: <Widget>[
+                IconButton(
+                  icon: Icon(Icons.save),
+                  onPressed: () async {
+                    final value = (await _keyEditor.currentState?.getText());
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      duration: Duration(seconds: 5),
+                      content: Text(value ?? '-'),
+                    ));
+                  },
+                )
+              ],
+            ),
+          ),
         ),
-        elevation: 0,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.save),
-            onPressed: () async {
-              final value = (await _keyEditor.currentState?.getText());
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                duration: Duration(seconds: 5),
-                content: Text(value ?? '-'),
-              ));
-            },
-          )
-        ],
-      ),
-      backgroundColor: Colors.teal,
+
+  backgroundColor: Color(0xFFCB84FB),
       body: FlutterSummernote(
         hint: 'Your text here...',
         key: _keyEditor,
