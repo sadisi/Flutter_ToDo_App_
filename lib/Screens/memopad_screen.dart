@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_summernote/flutter_summernote.dart';
 import 'package:flutter_todo_app/main.dart';
 
+import 'home_screen.dart';
+
 
 
 void main() {
@@ -58,9 +60,12 @@ class _NotesPageState extends State<NotesPage> {
               ),
             ),
             leading: IconButton(
-              icon: Icon(Icons.arrow_back), // Use any icon for the back button
+              icon: Icon(Icons.arrow_back),
               onPressed: () {
-                Navigator.pop(context); // Navigate back when the back button is pressed
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()), // Navigate to HomeScreen
+                );
               },
             ),
             elevation: 0,
