@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   flutter_summernote: ^1.1.1
   google_fonts: ^2.0.0
+  permission_handler: ^11.3.0
 
 dev_dependencies:
   flutter_test:
