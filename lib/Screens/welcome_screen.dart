@@ -83,7 +83,7 @@ class WelcomeScreen extends StatelessWidget {
                     SizedBox(height: 60),
                     Material(
                       color: Color(0xFF674AEF),
-                      borderRadius: BorderRadius.circular(40),
+                      borderRadius: BorderRadius.circular(30),
                       child: InkWell(
                         onTap: () {
                           Navigator.push(context,
