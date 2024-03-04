@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+void main() {
+  runApp(MaterialApp(
+    home: TimeTableScreen(),
+  ));
+}
+
 class TimeTableScreen extends StatefulWidget {
   @override
   State<TimeTableScreen> createState() => _TimeTableScreenState();
@@ -17,49 +23,16 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: _buildFilters(),
-          ),
           Expanded(child: _buildTimeTable()),
+          SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () {
+              _addSchedule(context);
+            },
+            child: Text('Add Schedule'),
+          ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _addSchedule(context);
-        },
-        child: Icon(Icons.add),
-      ),
-    );
-  }
-
-  Widget _buildFilters() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Text(
-          'Filter by Date:',
-          style: TextStyle(fontSize: 16),
-        ),
-        DropdownButton<String>(
-          value: null,
-          onChanged: null,
-          items: [
-            DropdownMenuItem(
-              value: 'Today',
-              child: Text('Today', style: TextStyle(fontSize: 16)),
-            ),
-            DropdownMenuItem(
-              value: 'This Week',
-              child: Text('This Week', style: TextStyle(fontSize: 16)),
-            ),
-            DropdownMenuItem(
-              value: 'This Month',
-              child: Text('This Month', style: TextStyle(fontSize: 16)),
-            ),
-          ],
-        ),
-      ],
     );
   }
 
@@ -70,7 +43,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: Card(
-            elevation: 3,
+            elevation: 5,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(15.0),
             ),
@@ -311,10 +284,4 @@ class TimeTableEntry {
     required this.startTime,
     required this.endTime,
   });
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: TimeTableScreen(),
-  ));
 }
