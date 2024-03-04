@@ -35,7 +35,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
 
   Widget _buildFilters() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Text(
           'Filter by Date:',
@@ -68,7 +68,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
       itemCount: timeTableEntries.length,
       itemBuilder: (context, index) {
         return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          padding: const EdgeInsets.all(8.0),
           child: Card(
             elevation: 3,
             shape: RoundedRectangleBorder(
@@ -143,114 +143,112 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextFormField(
-                controller: _titleController,
-                decoration: InputDecoration(
-                  labelText: 'Title',
-                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextFormField(
+              controller: _titleController,
+              decoration: InputDecoration(
+                labelText: 'Title',
+                border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.all(16),
+              ),
+            ),
+            SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: DropdownButtonFormField<String>(
+                    decoration: InputDecoration(
+                      labelText: 'Month',
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.all(16),
+                    ),
+                    value: _selectedMonth,
+                    items: _months.map((month) {
+                      return DropdownMenuItem<String>(
+                        value: month,
+                        child: Text(month),
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        _selectedMonth = newValue!;
+                      });
+                    },
+                  ),
                 ),
-              ),
-              SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
-                        labelText: 'Month',
-                        border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.all(16),
-                      ),
-                      value: _selectedMonth,
-                      items: _months.map((month) {
-                        return DropdownMenuItem<String>(
-                          value: month,
-                          child: Text(month),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        setState(() {
-                          _selectedMonth = newValue!;
-                        });
-                      },
+                SizedBox(width: 16),
+                Expanded(
+                  child: DropdownButtonFormField<String>(
+                    decoration: InputDecoration(
+                      labelText: 'Date',
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.all(16),
                     ),
+                    value: _selectedDate,
+                    items: _dates.map((date) {
+                      return DropdownMenuItem<String>(
+                        value: date,
+                        child: Text(date),
+                      );
+                    }).toList(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        _selectedDate = newValue!;
+                      });
+                    },
                   ),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
-                        labelText: 'Date',
-                        border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.all(16),
-                      ),
-                      value: _selectedDate,
-                      items: _dates.map((date) {
-                        return DropdownMenuItem<String>(
-                          value: date,
-                          child: Text(date),
-                        );
-                      }).toList(),
-                      onChanged: (newValue) {
-                        setState(() {
-                          _selectedDate = newValue!;
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: _yearController,
-                decoration: InputDecoration(
-                  labelText: 'Year',
-                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.all(16),
                 ),
-                keyboardType: TextInputType.number,
+              ],
+            ),
+            SizedBox(height: 16),
+            TextFormField(
+              controller: _yearController,
+              decoration: InputDecoration(
+                labelText: 'Year',
+                border: OutlineInputBorder(),
+                contentPadding: EdgeInsets.all(16),
               ),
-              SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: _startTimeController,
-                      decoration: InputDecoration(
-                        labelText: 'Start Time',
-                        border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.all(16),
-                      ),
+              keyboardType: TextInputType.number,
+            ),
+            SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    controller: _startTimeController,
+                    decoration: InputDecoration(
+                      labelText: 'Start Time',
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.all(16),
                     ),
                   ),
-                  SizedBox(width: 16),
-                  Expanded(
-                    child: TextFormField(
-                      controller: _endTimeController,
-                      decoration: InputDecoration(
-                        labelText: 'End Time',
-                        border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.all(16),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: () {
-                  _saveSchedule(context);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text('Save', style: TextStyle(fontSize: 18)),
                 ),
+                SizedBox(width: 16),
+                Expanded(
+                  child: TextFormField(
+                    controller: _endTimeController,
+                    decoration: InputDecoration(
+                      labelText: 'End Time',
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.all(16),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 32),
+            ElevatedButton(
+              onPressed: () {
+                _saveSchedule(context);
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text('Save', style: TextStyle(fontSize: 18)),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -313,4 +311,10 @@ class TimeTableEntry {
     required this.startTime,
     required this.endTime,
   });
+}
+
+void main() {
+  runApp(MaterialApp(
+    home: TimeTableScreen(),
+  ));
 }
