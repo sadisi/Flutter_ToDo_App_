@@ -15,33 +15,14 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
         title: Text('Time Table'),
         centerTitle: true,
       ),
-      body: ListView.builder(
-        itemCount: timeTableEntries.length,
-        itemBuilder: (context, index) {
-          return Card(
-            elevation: 3,
-            margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: ListTile(
-              title: Text(
-                timeTableEntries[index].title,
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 4),
-                  Text(
-                    'Date: ${timeTableEntries[index].date}, ${timeTableEntries[index].month} ${timeTableEntries[index].year}',
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    'Time: ${timeTableEntries[index].startTime} - ${timeTableEntries[index].endTime}',
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: _buildFilters(),
+          ),
+          Expanded(child: _buildTimeTable()),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -49,6 +30,71 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
         },
         child: Icon(Icons.add),
       ),
+    );
+  }
+
+  Widget _buildFilters() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          'Filter by Date:',
+          style: TextStyle(fontSize: 16),
+        ),
+        DropdownButton<String>(
+          value: null,
+          onChanged: null,
+          items: [
+            DropdownMenuItem(
+              value: 'Today',
+              child: Text('Today', style: TextStyle(fontSize: 16)),
+            ),
+            DropdownMenuItem(
+              value: 'This Week',
+              child: Text('This Week', style: TextStyle(fontSize: 16)),
+            ),
+            DropdownMenuItem(
+              value: 'This Month',
+              child: Text('This Month', style: TextStyle(fontSize: 16)),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTimeTable() {
+    return ListView.builder(
+      itemCount: timeTableEntries.length,
+      itemBuilder: (context, index) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          child: Card(
+            elevation: 3,
+            child: ListTile(
+              title: Text(
+                timeTableEntries[index].title,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 8),
+                  Text(
+                    'Date: ${timeTableEntries[index].date}, ${timeTableEntries[index].month} ${timeTableEntries[index].year}',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Time: ${timeTableEntries[index].startTime} - ${timeTableEntries[index].endTime}',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -99,14 +145,14 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
             children: [
               TextField(
                 controller: _titleController,
-                decoration: InputDecoration(labelText: 'Title'),
+                decoration: InputDecoration(labelText: 'Title', border: OutlineInputBorder()),
               ),
               SizedBox(height: 16),
               Row(
                 children: [
                   Expanded(
                     child: DropdownButtonFormField<String>(
-                      decoration: InputDecoration(labelText: 'Month'),
+                      decoration: InputDecoration(labelText: 'Month', border: OutlineInputBorder()),
                       value: _selectedMonth,
                       items: _months.map((month) {
                         return DropdownMenuItem<String>(
@@ -124,7 +170,7 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
                   SizedBox(width: 16),
                   Expanded(
                     child: DropdownButtonFormField<String>(
-                      decoration: InputDecoration(labelText: 'Date'),
+                      decoration: InputDecoration(labelText: 'Date', border: OutlineInputBorder()),
                       value: _selectedDate,
                       items: _dates.map((date) {
                         return DropdownMenuItem<String>(
@@ -144,7 +190,7 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
               SizedBox(height: 16),
               TextField(
                 controller: _yearController,
-                decoration: InputDecoration(labelText: 'Year'),
+                decoration: InputDecoration(labelText: 'Year', border: OutlineInputBorder()),
                 keyboardType: TextInputType.number,
               ),
               SizedBox(height: 16),
@@ -153,14 +199,14 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
                   Expanded(
                     child: TextField(
                       controller: _startTimeController,
-                      decoration: InputDecoration(labelText: 'Start Time'),
+                      decoration: InputDecoration(labelText: 'Start Time', border: OutlineInputBorder()),
                     ),
                   ),
                   SizedBox(width: 16),
                   Expanded(
                     child: TextField(
                       controller: _endTimeController,
-                      decoration: InputDecoration(labelText: 'End Time'),
+                      decoration: InputDecoration(labelText: 'End Time', border: OutlineInputBorder()),
                     ),
                   ),
                 ],
