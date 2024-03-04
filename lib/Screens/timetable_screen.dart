@@ -18,7 +18,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(16.0),
             child: _buildFilters(),
           ),
           Expanded(child: _buildTimeTable()),
@@ -71,7 +71,11 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
           child: Card(
             elevation: 3,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
             child: ListTile(
+              contentPadding: EdgeInsets.all(16),
               title: Text(
                 timeTableEntries[index].title,
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
@@ -143,16 +147,24 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextField(
+              TextFormField(
                 controller: _titleController,
-                decoration: InputDecoration(labelText: 'Title', border: OutlineInputBorder()),
+                decoration: InputDecoration(
+                  labelText: 'Title',
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.all(16),
+                ),
               ),
               SizedBox(height: 16),
               Row(
                 children: [
                   Expanded(
                     child: DropdownButtonFormField<String>(
-                      decoration: InputDecoration(labelText: 'Month', border: OutlineInputBorder()),
+                      decoration: InputDecoration(
+                        labelText: 'Month',
+                        border: OutlineInputBorder(),
+                        contentPadding: EdgeInsets.all(16),
+                      ),
                       value: _selectedMonth,
                       items: _months.map((month) {
                         return DropdownMenuItem<String>(
@@ -170,7 +182,11 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
                   SizedBox(width: 16),
                   Expanded(
                     child: DropdownButtonFormField<String>(
-                      decoration: InputDecoration(labelText: 'Date', border: OutlineInputBorder()),
+                      decoration: InputDecoration(
+                        labelText: 'Date',
+                        border: OutlineInputBorder(),
+                        contentPadding: EdgeInsets.all(16),
+                      ),
                       value: _selectedDate,
                       items: _dates.map((date) {
                         return DropdownMenuItem<String>(
@@ -188,25 +204,37 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
                 ],
               ),
               SizedBox(height: 16),
-              TextField(
+              TextFormField(
                 controller: _yearController,
-                decoration: InputDecoration(labelText: 'Year', border: OutlineInputBorder()),
+                decoration: InputDecoration(
+                  labelText: 'Year',
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.all(16),
+                ),
                 keyboardType: TextInputType.number,
               ),
               SizedBox(height: 16),
               Row(
                 children: [
                   Expanded(
-                    child: TextField(
+                    child: TextFormField(
                       controller: _startTimeController,
-                      decoration: InputDecoration(labelText: 'Start Time', border: OutlineInputBorder()),
+                      decoration: InputDecoration(
+                        labelText: 'Start Time',
+                        border: OutlineInputBorder(),
+                        contentPadding: EdgeInsets.all(16),
+                      ),
                     ),
                   ),
                   SizedBox(width: 16),
                   Expanded(
-                    child: TextField(
+                    child: TextFormField(
                       controller: _endTimeController,
-                      decoration: InputDecoration(labelText: 'End Time', border: OutlineInputBorder()),
+                      decoration: InputDecoration(
+                        labelText: 'End Time',
+                        border: OutlineInputBorder(),
+                        contentPadding: EdgeInsets.all(16),
+                      ),
                     ),
                   ),
                 ],
@@ -216,7 +244,10 @@ class _AddScheduleScreenState extends State<AddScheduleScreen> {
                 onPressed: () {
                   _saveSchedule(context);
                 },
-                child: Text('Save'),
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text('Save', style: TextStyle(fontSize: 18)),
+                ),
               ),
             ],
           ),
