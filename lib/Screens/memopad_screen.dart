@@ -54,7 +54,7 @@ class _NotesPageState extends State<NotesPage> {
                 widget.title,
                 style: TextStyle(
                   fontSize: 22.0,
-                  color: Colors.grey.shade800,
+                  color: Colors.black,
                   fontFamily: 'Roboto-Black',
                 ),
               ),
