@@ -29,7 +29,7 @@ class NotesPage extends StatefulWidget {
 
 class _NotesPageState extends State<NotesPage> {
   GlobalKey<FlutterSummernoteState> _keyEditor = GlobalKey();
-  String result = '';
+  List<String> todoItems = [];
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +62,12 @@ class _NotesPageState extends State<NotesPage> {
               TextButton(
                 onPressed: () async {
                   // Handle save button press
+                  final value = await _keyEditor.currentState?.getText();
+                  if (value != null && value.isNotEmpty) {
+                    setState(() {
+                      todoItems.add(value);
+                    });
+                  }
                 },
                 child: Text(
                   'Save',
@@ -97,18 +103,12 @@ class _NotesPageState extends State<NotesPage> {
                 ),
               ),
             ),
-            Container(
-              padding: EdgeInsets.all(20),
-              color: Colors.purple,
-              height: 270,
-              width: double.infinity,
-              child: Column(
-                children: <Widget>[
-                  buildContainer(),
-                  buildContainer(),
-                  buildContainer(),
-                ],
-              ),
+            ListView.builder(
+              shrinkWrap: true,
+              itemCount: todoItems.length,
+              itemBuilder: (context, index) {
+                return buildContainer(todoItems[index]);
+              },
             ),
           ],
         ),
@@ -116,25 +116,52 @@ class _NotesPageState extends State<NotesPage> {
     );
   }
 
-  Container buildContainer() {
+  Container buildContainer(String text) {
+    // Remove HTML tags
+    String cleanedText = text.replaceAll(RegExp(r'<[^>]*>'), '');
+
+    // Limit text to 50 characters
+    String limitedText = cleanedText.length <= 50
+        ? cleanedText
+        : cleanedText.substring(0, 50) + '...';
+
     return Container(
-                    margin: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white,
-                    ),
-                    height: 45,
-                    width: double.infinity,
-                    child: Container(
-                      margin: EdgeInsets.only(left: 300),
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.delete,
-                        ),
-                        onPressed: () {
-                          setState(() {});
-                        },
-                      ),
-                    ));
+      margin: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.purple,
+      ),
+      height: 45,
+      width: double.infinity,
+      child: InkWell(
+        onTap: () {
+          // Populate Summernote text area with clicked text
+          _keyEditor.currentState?.setText(text);
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                limitedText,
+                style: TextStyle(fontSize: 15),
+              ),
+              IconButton(
+                icon: Icon(
+                  Icons.delete,
+                  color: Colors.black,
+                ),
+                onPressed: () {
+                  setState(() {
+                    todoItems.remove(text);
+                  });
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
