@@ -1,8 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_summernote/flutter_summernote.dart';
-import 'package:flutter_todo_app/main.dart';
-import 'home_screen.dart';
 
 void main() {
   runApp(MemoPadScreen());
@@ -31,92 +28,81 @@ class NotesPage extends StatefulWidget {
 }
 
 class _NotesPageState extends State<NotesPage> {
-
   GlobalKey<FlutterSummernoteState> _keyEditor = GlobalKey();
   String result = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(kToolbarHeight),
-          child: Container(
-            width: double.infinity,
-            color: Colors.red,
-            child: AppBar(
-              backgroundColor: Colors.transparent,
-              title: Center(
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(kToolbarHeight),
+        child: Container(
+          width: double.infinity,
+          color: Colors.red,
+          child: AppBar(
+            backgroundColor: Colors.transparent,
+            title: Center(
+              child: Text(
+                widget.title,
+                style: TextStyle(
+                  fontSize: 22.0,
+                  color: Colors.black,
+                  fontFamily: 'Roboto-Black',
+                ),
+              ),
+            ),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back),
+              onPressed: () {
+                // Handle back button press
+              },
+            ),
+            elevation: 0,
+            actions: <Widget>[
+              TextButton(
+                onPressed: () async {
+                  // Handle save button press
+                },
                 child: Text(
-                  widget.title,
+                  'Save',
                   style: TextStyle(
-                    fontSize: 22.0,
                     color: Colors.black,
-                    fontFamily: 'Roboto-Black',
                   ),
                 ),
               ),
-              leading: IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            HomePage()), // Navigate to HomeScreen
-                  );
-                },
-              ),
-              elevation: 0,
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () async {
-                    final value = (await _keyEditor.currentState?.getText());
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      duration: Duration(seconds: 5),
-                      content: Text(
-                        value ?? 'Success',
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ));
-                  },
-                  child: Text(
-                    'Save',
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
-                  ), // Corrected this line
-                ),
-              ],
-            ),
+            ],
           ),
         ),
-        body: Column(
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: Column(
           children: <Widget>[
-            Expanded(
-              child: FlutterSummernote(
-                hint: 'Your text here...',
-                key: _keyEditor,
-                customToolbar: """
-          [
-            ['style', ['bold', 'italic', 'underline', 'clear']],
-            ['font', ['strikethrough', 'superscript', 'subscript']],
-            ['insert', ['link', 'table', 'hr']]
-          ]
-        """,
+            Container(
+              height: 500.0,
+              child: Expanded(
+                child: FlutterSummernote(
+                  hint: 'Your text here...',
+                  key: _keyEditor,
+                  customToolbar: """
+                    [
+                      ['style', ['bold', 'italic', 'underline', 'clear']],
+                      ['font', ['strikethrough', 'superscript', 'subscript']],
+                      ['insert', ['link', 'table', 'hr']]
+                    ]
+                  """,
+                ),
               ),
             ),
-            Expanded(child: Row(
-              children: <Widget>[
-                
-              ],
-
-
-
-
-            ),),
+            Container(
+              height: 270,
+              color: Colors.purpleAccent,
+            ),
           ],
-        ));
+        ),
+      ),
+    );
   }
 }
