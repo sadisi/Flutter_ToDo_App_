@@ -47,7 +47,7 @@ class _NotesPageState extends State<NotesPage> {
                 style: TextStyle(
                   fontSize: 22.0,
                   color: Colors.black,
-                  fontFamily: 'Roboto-Black',
+                  fontFamily: 'Roboto-Regular',
                 ),
               ),
             ),
@@ -69,10 +69,14 @@ class _NotesPageState extends State<NotesPage> {
                     });
                   }
                 },
-                child: Text(
-                  'Save',
-                  style: TextStyle(
-                    color: Colors.black,
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 5),
+                  child: Text(
+                    'SAVE',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16
+                    ),
                   ),
                 ),
               ),
