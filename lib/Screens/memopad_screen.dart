@@ -90,25 +90,30 @@ class _NotesPageState extends State<NotesPage> {
               height: 500.0,
               width: double.infinity,
               child: Expanded(
-                child: FlutterSummernote(
-                  hint: 'Your text here...',
-                  key: _keyEditor,
-                  customToolbar: """
-                    [
-                      ['style', ['bold', 'italic', 'underline', 'clear']],
-                      ['font', ['strikethrough', 'superscript', 'subscript']],
-                      ['insert', ['link', 'table', 'hr']]
-                    ]
-                  """,
+                child: SingleChildScrollView(
+                  child: FlutterSummernote(
+                    hint: 'Your text here...',
+                    key: _keyEditor,
+                    customToolbar: """
+                      [
+                        ['style', ['bold', 'italic', 'underline', 'clear']],
+                        ['font', ['strikethrough', 'superscript', 'subscript']],
+                        ['insert', ['link', 'table', 'hr']]
+                      ]
+                    """,
+                  ),
                 ),
               ),
             ),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: todoItems.length,
-              itemBuilder: (context, index) {
-                return buildContainer(todoItems[index]);
-              },
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.6,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: todoItems.length,
+                itemBuilder: (context, index) {
+                  return buildContainer(todoItems[index]);
+                },
+              ),
             ),
           ],
         ),
@@ -120,10 +125,9 @@ class _NotesPageState extends State<NotesPage> {
     // Remove HTML tags
     String cleanedText = text.replaceAll(RegExp(r'<[^>]*>'), '');
 
-    // Limit text to 50 characters
-    String limitedText = cleanedText.length <= 50
-        ? cleanedText
-        : cleanedText.substring(0, 50) + '...';
+    // Limit text to the first 12 words
+    String limitedText =
+    cleanedText.split(' ').take(12).join(' ');
 
     return Container(
       margin: EdgeInsets.all(10),
