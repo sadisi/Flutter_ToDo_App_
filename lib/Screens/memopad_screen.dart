@@ -70,16 +70,20 @@ class _NotesPageState extends State<NotesPage> {
             ),
             elevation: 0,
             actions: <Widget>[
-              IconButton(
-                icon: Icon(Icons.save),
+              TextButton(
                 onPressed: () async {
                   final value = (await _keyEditor.currentState?.getText());
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     duration: Duration(seconds: 5),
-                    content: Text(value ?? '-'),
+                    content: Text(value ?? 'Success',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),),
                   ));
                 },
+                child: Text('Save'), // Corrected this line
               )
+
             ],
           ),
         ),
