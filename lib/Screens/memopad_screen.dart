@@ -81,8 +81,11 @@ class _NotesPageState extends State<NotesPage> {
                     ),),
                   ));
                 },
-                child: Text('Save'), // Corrected this line
-              )
+                child: Text('Save',
+                style: TextStyle(
+                    color: Colors.black,
+                ),), // Corrected this line
+              ),
 
             ],
           ),
