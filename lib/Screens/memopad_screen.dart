@@ -104,82 +104,9 @@ class _NotesPageState extends State<NotesPage> {
               width: double.infinity,
               child: Column(
                 children: <Widget>[
-                  Container(
-                      margin: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                      ),
-                      height: 45,
-                      width: double.infinity,
-                      child: Container(
-                        margin: EdgeInsets.only(left: 320),
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.delete,
-                          ),
-                          onPressed: () {
-                            setState(() {});
-                          },
-                        ),
-                      )),
-                  Container(
-                      margin: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                      ),
-                      height: 45,
-                      width: double.infinity,
-                      child: Container(
-                        margin: EdgeInsets.only(left: 320),
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.delete,
-                          ),
-                          onPressed: () {
-                            setState(() {});
-                          },
-                        ),
-                      )),
-                  Container(
-                      margin: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                      ),
-                      height: 45,
-                      width: double.infinity,
-                      child: Container(
-                        margin: EdgeInsets.only(left: 320),
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.delete,
-                          ),
-                          onPressed: () {
-                            setState(() {});
-                          },
-                        ),
-                      )),
-                  Container(
-                      margin: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white,
-                      ),
-                      height: 45,
-                      width: double.infinity,
-                      child: Container(
-                        margin: EdgeInsets.only(left: 320),
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.delete,
-                          ),
-                          onPressed: () {
-                            setState(() {});
-                          },
-                        ),
-                      )),
+                  buildContainer(),
+                  buildContainer(),
+                  buildContainer(),
                 ],
               ),
             ),
@@ -187,5 +114,27 @@ class _NotesPageState extends State<NotesPage> {
         ),
       ),
     );
+  }
+
+  Container buildContainer() {
+    return Container(
+                    margin: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white,
+                    ),
+                    height: 45,
+                    width: double.infinity,
+                    child: Container(
+                      margin: EdgeInsets.only(left: 300),
+                      child: IconButton(
+                        icon: Icon(
+                          Icons.delete,
+                        ),
+                        onPressed: () {
+                          setState(() {});
+                        },
+                      ),
+                    ));
   }
 }
