@@ -35,6 +35,7 @@ class _NotesPageState extends State<NotesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFF674AEF),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(kToolbarHeight),
         child: Container(
@@ -84,15 +85,12 @@ class _NotesPageState extends State<NotesPage> {
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.only(
-          bottom: MediaQuery
-              .of(context)
-              .viewInsets
-              .bottom,
+          bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
         child: Column(
           children: <Widget>[
             Container(
-              height: 450.0,
+              height: 400.0,
               width: double.infinity,
               child: Expanded(
                 child: SingleChildScrollView(
@@ -111,10 +109,7 @@ class _NotesPageState extends State<NotesPage> {
               ),
             ),
             SizedBox(
-              height: MediaQuery
-                  .of(context)
-                  .size
-                  .height * 0.6,
+              height: MediaQuery.of(context).size.height * 0.6,
               child: ListView.builder(
                 shrinkWrap: true,
                 itemCount: todoItems.length,
@@ -129,58 +124,60 @@ class _NotesPageState extends State<NotesPage> {
     );
   }
 
-  Expanded buildContainer(String text) {
+  Container buildContainer(String text) {
     // Remove HTML tags
     String cleanedText = text.replaceAll(RegExp(r'<[^>]*>'), '');
 
     // Limit text to the first 12 words
     String limitedText = cleanedText.split(' ').take(12).join(' ');
 
-    return Expanded(
-      child: Scrollable(
-        axisDirection: AxisDirection.down,
-        controller: ScrollController(),
-        physics: AlwaysScrollableScrollPhysics(),
-        viewportBuilder: (BuildContext context, ViewportOffset offset) {
-          return Container(
-            margin: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Color(0xFF674AEF),
-            ),
-            height: 45,
-            width: double.infinity,
-            child: InkWell(
-              onTap: () {
-                // Populate Summernote text area with clicked text
-                _keyEditor.currentState?.setText(text);
-              },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      limitedText,
-                      style: TextStyle(fontSize: 15),
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.delete,
-                        color: Colors.black,
+    return Container(
+      child: Expanded(
+        child: Scrollable(
+          axisDirection: AxisDirection.down,
+          controller: ScrollController(),
+          physics: AlwaysScrollableScrollPhysics(),
+          viewportBuilder: (BuildContext context, ViewportOffset offset) {
+            return Container(
+              margin: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+              ),
+              height: 45,
+              width: double.infinity,
+              child: InkWell(
+                onTap: () {
+                  // Populate Summernote text area with clicked text
+                  _keyEditor.currentState?.setText(text);
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        limitedText,
+                        style: TextStyle(fontSize: 15),
                       ),
-                      onPressed: () {
-                        setState(() {
-                          todoItems.remove(text);
-                        });
-                      },
-                    ),
-                  ],
+                      IconButton(
+                        icon: Icon(
+                          Icons.delete,
+                          color: Colors.black,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            todoItems.remove(text);
+                          });
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
