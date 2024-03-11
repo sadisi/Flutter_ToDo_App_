@@ -39,7 +39,7 @@ class _NotesPageState extends State<NotesPage> {
         preferredSize: Size.fromHeight(kToolbarHeight),
         child: Container(
           width: double.infinity,
-          color: Colors.purple,
+          color: Color(0xFF674AEF),
           child: AppBar(
             backgroundColor: Colors.transparent,
             title: Center(
@@ -146,7 +146,7 @@ class _NotesPageState extends State<NotesPage> {
             margin: EdgeInsets.all(10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: Colors.purple,
+              color: Color(0xFF674AEF),
             ),
             height: 45,
             width: double.infinity,
