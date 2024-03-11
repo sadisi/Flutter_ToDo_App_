@@ -107,10 +107,11 @@ class _NotesPageState extends State<NotesPage> {
         """,
               ),
             ),
-            Expanded(child: Container(
-              color: Colors.red,
-              width: double.infinity,
-              height: 400,
+            Expanded(child: Row(
+              children: <Widget>[
+                
+              ],
+
 
 
 
