@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_todo_app/Screens/calander_screen.dart';
 import 'package:flutter_todo_app/Screens/history_screen.dart';
@@ -5,35 +8,80 @@ import 'package:flutter_todo_app/Screens/memofiles_screen.dart';
 import 'package:flutter_todo_app/Screens/memopad_screen.dart';
 import 'package:flutter_todo_app/Screens/timetable_screen.dart';
 import 'package:flutter_todo_app/Screens/todo_screen.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
+
+import '../user/login_page.dart';
 
 class HomePage extends StatelessWidget {
-  //creating static data in lists
-  List catNames = [
-    "Categories",
-    'Classes',
-    'Free Courses',
-    'Bookstore',
-    'Live Courses',
-    'LeaderBoard',
-  ];
+  Future<String> getUsername(int userId) async {
+    final url = Uri.parse('http://10.0.2.2:8080/api/users/username/$userId');
+    final response = await http.get(url);
 
-  List<Color> catColors = [
-    Color(0xFFFFCF2F),
-    Color(0xFF6FE08D),
-    Color(0xFF61BDFD),
-    Color(0xFFFC7F7F),
-    Color(0xFFCB84FB),
-    Color(0xFF78E667),
-  ];
+    if (response.statusCode == 200) {
+      try {
+        final Map<String, dynamic> data = json.decode(response.body);
+        final String username = data['username'];
+        return username;
+      } catch (e) {
+        print('Error decoding response. Response body: ${response.body}');
+        return 'Unknown';
+      }
+    } else {
+      print('Error: ${response.statusCode}');
+      print('Response body: ${response.body}');
+      return 'Unknown';
+    }
+  }
 
-  List<Icon> catIcons = [
-    Icon(Icons.category, color: Colors.white, size: 30),
-    Icon(Icons.video_library, color: Colors.white, size: 30),
-    Icon(Icons.assessment, color: Colors.white, size: 30),
-    Icon(Icons.store, color: Colors.white, size: 30),
-    Icon(Icons.play_circle_fill, color: Colors.white, size: 30),
-    Icon(Icons.emoji_events, color: Colors.white, size: 30),
-  ];
+  Future<Map<String, dynamic>> getWeatherData() async {
+    final String apiKey = 'b2bbc7b07ebc93d7aabc7e4c6c107a0b';
+    final String cityName = 'Colombo';
+    final String apiUrl =
+        'https://api.openweathermap.org/data/2.5/weather?q=$cityName&appid=$apiKey&units=metric';
+
+    try {
+      final response = await http.get(Uri.parse(apiUrl));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> weatherData = json.decode(response.body);
+        return weatherData;
+      } else {
+        throw Exception('Failed to load weather data');
+      }
+    } catch (e) {
+      print('Error: $e');
+      throw Exception('Failed to load weather data');
+    }
+  }
+
+  Future<int> getUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('userId') ?? -1;
+  }
+
+  Future<void> _logout(BuildContext context) async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.clear();
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+
+      // Show a snackbar when user logs out and comes back to login page
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('You have been successfully logged out! Come back again.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    } catch (e) {
+      print('Error during logout: $e');
+    }
+  }
 
   List<String> imgList = [
     'ToDo',
@@ -69,53 +117,68 @@ class HomePage extends StatelessWidget {
                       size: 30,
                       color: Colors.white,
                     ),
-                    //more vert with drop down
-                    Padding(
-                      padding: EdgeInsets.only(right: 1),
-                    child: PopupMenuButton(
+                    PopupMenuButton(
                       itemBuilder: (context) => [
                         PopupMenuItem(
                           child: Row(
                             children: [
-                          Icon(
-                            Icons.logout_outlined,
-                          color: Colors.black54,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                              left: 10.0
+                              Icon(
+                                Icons.logout_outlined,
+                                color: Colors.black54,
                               ),
-                          ),   
-                          Text('LogOut')
-                        ],
+                              Padding(
+                                padding: EdgeInsets.only(left: 10.0),
+                              ),
+                              InkWell(
+                                onTap: () => _logout(context),
+                                child: Text('Log Out'),
+                              ),
+                            ],
+                          ),
                         ),
-                        )
                       ],
                       child: Icon(
-                     Icons.more_vert,
-                      size: 30,
-                      color: Colors.white,
+                        Icons.more_vert,
+                        size: 30,
+                        color: Colors.white,
+                      ),
                     ),
-                    ),
-                    ),
-                    
                   ],
                 ),
-                SizedBox(height: 20),
-                Padding(
-                  padding: EdgeInsets.only(left: 3, bottom: 15),
-                  child: Text(
-                    'Hi ! R.P.D.S.V.R',
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 1,
-                      wordSpacing: 2,
-                      color: Colors.white,
-                    ),
-                  ),
+                SizedBox(height: 10),
+                FutureBuilder<int>(
+                  future: getUserId(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return CircularProgressIndicator();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      final int userId = snapshot.data ?? -1;
+                      return FutureBuilder<String>(
+                        future: getUsername(userId),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            final String username = snapshot.data ?? 'Unknown';
+                            return Text(
+                              'Hi, $username',
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.black.withOpacity(0.5),
+                              ),
+                            );
+                          }
+                        },
+                      );
+                    }
+                  },
                 ),
-                // Weather API area
                 Container(
                   margin: EdgeInsets.only(top: 5, bottom: 20),
                   width: MediaQuery.of(context).size.width,
@@ -125,16 +188,36 @@ class HomePage extends StatelessWidget {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
                   ),
-                  child: Text(
-                    "Weather API",
-                  )
-                  
+                  child: FutureBuilder<Map<String, dynamic>>(
+                    future: getWeatherData(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState ==
+                          ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error loading weather data');
+                      } else {
+                        final weatherData = snapshot.data;
+                        final time = DateFormat.Hm().format(DateTime.now());
+
+                        return Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Weather: ${weatherData?['main']?['temp'] ?? 'N/A'}°C',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            SizedBox(height: 10),
+                            LiveTimeDisplay(),
+                          ],
+                        );
+                      }
+                    },
+                  ),
                 ),
               ],
             ),
           ),
-
-          // Large buttons area (main) 
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
             child: GridView.builder(
@@ -144,14 +227,13 @@ class HomePage extends StatelessWidget {
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio:
-                    (MediaQuery.of(context).size.height - 50 - 25) / (4 * 240),
+                (MediaQuery.of(context).size.height - 50 - 25) / (4 * 240),
                 mainAxisSpacing: 10,
                 crossAxisSpacing: 10,
               ),
               itemBuilder: (context, index) {
                 return InkWell(
                   onTap: () {
-                    // Navigate to different pages based on the button clicked
                     switch (index) {
                       case 0:
                         Navigator.push(
@@ -202,7 +284,7 @@ class HomePage extends StatelessWidget {
                     child: Column(
                       children: [
                         Padding(
-                          padding: EdgeInsets.all(06),//ui pixel bug change 10 to 06
+                          padding: EdgeInsets.all(06),
                           child: Image.asset(
                             "images/${imgList[index]}.png",
                             width: 100,
@@ -238,4 +320,41 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
+}
+
+class LiveTimeDisplay extends StatefulWidget {
+  @override
+  _LiveTimeDisplayState createState() => _LiveTimeDisplayState();
+}
+
+class _LiveTimeDisplayState extends State<LiveTimeDisplay> {
+  late String currentTime;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize the time
+    updateTime();
+
+    // Update the time every second
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      updateTime();
+    });
+  }
+
+  void updateTime() {
+    final String formattedTime = DateFormat.Hm().format(DateTime.now());
+    setState(() {
+      currentTime = formattedTime;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+        'Time: $currentTime',
+        style: TextStyle(fontSize: 18),
+        );
+    }
 }
