@@ -168,9 +168,11 @@ class HomePage extends StatelessWidget {
                             return Text(
                               'Hi, $username',
                               style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w500,
-                                color: Colors.black.withOpacity(0.5),
+                                fontSize: 25,
+                                fontWeight: FontWeight.w600,
+                                letterSpacing: 1,
+                                wordSpacing: 2,
+                                color: Colors.white,
                               ),
                             );
                           }
