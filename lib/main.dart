@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
       ),
-      home: LoginPage(),// default master branch page - WelcomeScreen()
+      home: LoginPage(),// default master branch page - WelcomeScreen() to splash
     );
   }
 }
