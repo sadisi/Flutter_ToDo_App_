@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_summernote/flutter_summernote.dart';
+import 'package:flutter_todo_app/Screens/home_screen.dart';
 
 void main() {
   runApp(MemoPadScreen());
@@ -35,7 +36,7 @@ class _NotesPageState extends State<NotesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF674AEF),
+      backgroundColor: Color(0xFFF5F3FF),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(kToolbarHeight),
         child: Container(
@@ -56,7 +57,15 @@ class _NotesPageState extends State<NotesPage> {
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () {
+                setState(() {
+                  Navigator.push(context,
+                      MaterialPageRoute(
+                        builder: (context) => HomePage(),
+                      ));
+
+                });
                 // Handle back button press
+
               },
             ),
             elevation: 0,
@@ -83,43 +92,36 @@ class _NotesPageState extends State<NotesPage> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        child: Column(
-          children: <Widget>[
-            Container(
-              height: 400.0,
-              width: double.infinity,
-              child: Expanded(
-                child: SingleChildScrollView(
-                  child: FlutterSummernote(
-                    hint: 'Your text here...',
-                    key: _keyEditor,
-                    customToolbar: """
-                      [
-                        ['style', ['bold', 'italic', 'underline', 'clear']],
-                        ['font', ['strikethrough', 'superscript', 'subscript']],
-                        ['insert', ['link', 'table', 'hr']]
-                      ]
-                    """,
-                  ),
-                ),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              child: FlutterSummernote(
+                hint: 'Your text here...',
+                key: _keyEditor,
+                customToolbar: """
+                  [
+                    ['style', ['bold', 'italic', 'underline', 'clear']],
+                    ['font', ['strikethrough', 'superscript', 'subscript']],
+                    ['insert', ['link', 'table', 'hr']]
+                  ]
+                """,
               ),
             ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.6,
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: todoItems.length,
-                itemBuilder: (context, index) {
-                  return buildContainer(todoItems[index]);
-                },
-              ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: todoItems.length,
+              itemBuilder: (context, index) {
+                return buildContainer(todoItems[index]);
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -132,51 +134,40 @@ class _NotesPageState extends State<NotesPage> {
     String limitedText = cleanedText.split(' ').take(12).join(' ');
 
     return Container(
-      child: Expanded(
-        child: Scrollable(
-          axisDirection: AxisDirection.down,
-          controller: ScrollController(),
-          physics: AlwaysScrollableScrollPhysics(),
-          viewportBuilder: (BuildContext context, ViewportOffset offset) {
-            return Container(
-              margin: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.white,
+      margin: EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.white,
+      ),
+      height: 45,
+      width: double.infinity,
+      child: InkWell(
+        onTap: () {
+          // Populate Summernote text area with clicked text
+          _keyEditor.currentState?.setText(text);
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                limitedText,
+                style: TextStyle(fontSize: 15),
               ),
-              height: 45,
-              width: double.infinity,
-              child: InkWell(
-                onTap: () {
-                  // Populate Summernote text area with clicked text
-                  _keyEditor.currentState?.setText(text);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        limitedText,
-                        style: TextStyle(fontSize: 15),
-                      ),
-                      IconButton(
-                        icon: Icon(
-                          Icons.delete,
-                          color: Colors.black,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            todoItems.remove(text);
-                          });
-                        },
-                      ),
-                    ],
-                  ),
+              IconButton(
+                icon: Icon(
+                  Icons.delete,
+                  color: Colors.black,
                 ),
+                onPressed: () {
+                  setState(() {
+                    todoItems.remove(text);
+                  });
+                },
               ),
-            );
-          },
+            ],
+          ),
         ),
       ),
     );
