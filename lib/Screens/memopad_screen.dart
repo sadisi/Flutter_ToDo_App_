@@ -84,7 +84,7 @@ class _NotesPageState extends State<NotesPage> {
               },
             ),
           ),
-          // buildSaveButton(),
+          buildSaveButton(),
         ],
       ),
     );
@@ -103,7 +103,7 @@ class _NotesPageState extends State<NotesPage> {
       height: 45,
       width: double.infinity,
       child: InkWell(
-        onTap: () => null,
+        onTap: () => setText(text),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
@@ -126,5 +126,32 @@ class _NotesPageState extends State<NotesPage> {
       ),
     );
   }
+
+  void setText(String text) {
+    setState(() {
+      _textEditingController.text = text;
+    });
   }
 
+  Widget buildSaveButton() {
+    return GestureDetector(
+      onTap: () {
+
+      },
+      child: Container(
+        width: double.infinity,
+        height: 60,
+        color: Colors.black87,
+        child: Center(
+          child: const Text(
+            'SAVE',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 22,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
