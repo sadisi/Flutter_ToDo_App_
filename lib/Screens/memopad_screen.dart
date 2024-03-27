@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_todo_app/Screens/home_screen.dart';
 
 void main() {
   runApp(MemoPadScreen());
@@ -47,7 +48,14 @@ class _NotesPageState extends State<NotesPage> {
         centerTitle: true,
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => HomePage(),
+              ),
+            );
+          },
         ),
       ),
       body: Column(
