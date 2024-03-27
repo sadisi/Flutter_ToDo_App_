@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter_summernote/flutter_summernote.dart';
-import 'package:flutter_todo_app/Screens/home_screen.dart';
 
 void main() {
   runApp(MemoPadScreen());
@@ -30,66 +27,27 @@ class NotesPage extends StatefulWidget {
 }
 
 class _NotesPageState extends State<NotesPage> {
-  GlobalKey<FlutterSummernoteState> _keyEditor = GlobalKey();
-  List<String> todoItems = [];
+  final TextEditingController _textEditingController = TextEditingController();
+  final List<String> todoItems = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFFF5F3FF),
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(kToolbarHeight),
-        child: Container(
-          width: double.infinity,
-          color: Color(0xFF674AEF),
-          child: AppBar(
-            backgroundColor: Colors.transparent,
-            title: Center(
-              child: Text(
-                widget.title,
-                style: TextStyle(
-                  fontSize: 22.0,
-                  color: Colors.black,
-                  fontFamily: 'Roboto-Regular',
-                ),
-              ),
-            ),
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back),
-              onPressed: () {
-                setState(() {
-                  Navigator.push(context,
-                      MaterialPageRoute(
-                        builder: (context) => HomePage(),
-                      ));
-
-                });
-                // Handle back button press
-
-              },
-            ),
-            elevation: 0,
-            actions: <Widget>[
-              TextButton(
-                onPressed: () async {
-                  // Handle save button press
-                  final value = await _keyEditor.currentState?.getText();
-                  if (value != null && value.isNotEmpty) {
-                    setState(() {
-                      todoItems.add(value);
-                    });
-                  }
-                },
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 5),
-                  child: Text(
-                    'SAVE',
-                    style: TextStyle(color: Colors.black, fontSize: 16),
-                  ),
-                ),
-              ),
-            ],
+      appBar: AppBar(
+        backgroundColor: Color(0xFF674AEF),
+        title: Text(
+          widget.title,
+          style: TextStyle(
+            fontSize: 22.0,
+            color: Colors.black,
+            fontFamily: 'Roboto-Regular',
           ),
+        ),
+        centerTitle: true,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
         ),
       ),
       body: Column(
@@ -99,18 +57,23 @@ class _NotesPageState extends State<NotesPage> {
               padding: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
-              child: FlutterSummernote(
-                hint: 'Your text here...',
-                key: _keyEditor,
-                customToolbar: """
-                  [
-                    ['style', ['bold', 'italic', 'underline', 'clear']],
-                    ['font', ['strikethrough', 'superscript', 'subscript']],
-                    ['insert', ['link', 'table', 'hr']]
-                  ]
-                """,
+              child: TextField(
+                controller: _textEditingController,
+                maxLines: null,
+                keyboardType: TextInputType.multiline,
+                decoration: InputDecoration(
+                  hintText: "Enter your text here...",
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide.none,
+                  ),
+                ),
               ),
             ),
+          ),
+          Container(
+            width: double.infinity,
+            height: 5,
+            color: Colors.white60,
           ),
           Expanded(
             child: ListView.builder(
@@ -121,17 +84,15 @@ class _NotesPageState extends State<NotesPage> {
               },
             ),
           ),
+          // buildSaveButton(),
         ],
       ),
     );
   }
 
-  Container buildContainer(String text) {
-    // Remove HTML tags
-    String cleanedText = text.replaceAll(RegExp(r'<[^>]*>'), '');
-
-    // Limit text to the first 12 words
-    String limitedText = cleanedText.split(' ').take(12).join(' ');
+  Widget buildContainer(String text) {
+    final String cleanedText = text.replaceAll(RegExp(r'<[^>]*>'), '');
+    final String limitedText = cleanedText.split(' ').take(12).join(' ');
 
     return Container(
       margin: EdgeInsets.all(12),
@@ -142,10 +103,7 @@ class _NotesPageState extends State<NotesPage> {
       height: 45,
       width: double.infinity,
       child: InkWell(
-        onTap: () {
-          // Populate Summernote text area with clicked text
-          _keyEditor.currentState?.setText(text);
-        },
+        onTap: () => null,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(
@@ -160,11 +118,7 @@ class _NotesPageState extends State<NotesPage> {
                   Icons.delete,
                   color: Colors.black,
                 ),
-                onPressed: () {
-                  setState(() {
-                    todoItems.remove(text);
-                  });
-                },
+                onPressed: () => setState(() => todoItems.remove(text)),
               ),
             ],
           ),
@@ -172,4 +126,5 @@ class _NotesPageState extends State<NotesPage> {
       ),
     );
   }
-}
+  }
+
