@@ -136,7 +136,10 @@ class _NotesPageState extends State<NotesPage> {
   Widget buildSaveButton() {
     return GestureDetector(
       onTap: () {
-
+        setState(() {
+          todoItems.add(_textEditingController.text);
+          _textEditingController.clear();
+        });
       },
       child: Container(
         width: double.infinity,
